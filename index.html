@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>タブレットシステム - モックアップ</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+  <!--ckeditor-4-->
+  <script src="./node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js"></script>
+  <script src="./node_modules/@ckeditor/ckeditor5-vue2/dist/ckeditor.js"></script>
+  <script src="./node_modules/@ckeditor/ckeditor5-build-classic/build/translations/ja.js"></script>
+  
+  <!--cropper-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js" integrity="sha512-FHa4dxvEkSR0LOFH/iFH0iSqlYHf/iTwLc5Ws/1Su1W90X0qnxFxciJimoue/zyOA/+Qz/XQmmKqjbubAAzpkA==" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.css" integrity="sha512-NCJ1O5tCMq4DK670CblvRiob3bb5PAxJ7MALAz2cV40T9RgNMrJSAwJKy0oz20Wu7TDn9Z2WnveirOeHmpaIlA==" crossorigin="anonymous" />
+
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.css">
+  <style>
+    * {
+      font-family: 'Meiryo UI';
+    }
+
+    hr {
+      border-color: #ddd;
+      background-color: #ddd;
+    }
+
+    .flash {
+      animation: flash 1s linear infinite;
+    }
+
+    @keyframes flash {
+      0% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0;
+      }
+    }
+
+    .detail_tab_under {
+      height: calc(100vh - 220px);
+      width: 100%;
+      background-color: #FFF;
+      border: 1px solid rgb(219, 219, 219);
+      border-top: 0;
+      border-radius: 4px;
+      overflow-y: scroll;
+    }
+
+    .margin10 {
+      margin: 10px;
+    }
+
+    .shitadori_tab_under {
+      padding: 10px;
+    }
+
+    .modal-card {
+      min-width: 950px;
+      max-width: 1150px;
+      width: 70%;
+    }
+
+    .dies label {
+      text-align: right;
+      line-height: 37px;
+    }
+
+    .modal-card-foot {
+      justify-content: flex-end;
+    }
+
+    .carousel {
+      display: flex;
+      overflow-x: scroll;
+      scroll-snap-type: x mandatory;
+    }
+
+    .carousel img {
+      width: 100vw;
+      height: 60vh;
+      object-fit: cover;
+      scroll-snap-align: start;
+    }
+
+    .carousel::-webkit-scrollbar {
+      display: none;
+    }
+
+    .btns {
+      display: flex;
+      justify-content: center;
+      padding: 8px;
+    }
+
+    .btns button {
+      margin: 0px 4px;
+    }
+
+    .is-selected {
+      background: #ffc;
+    }
+
+    .media-wrap{
+      position:relative;
+      height:100%;
+    }
+    .media-wrap img, .media-wrap video{
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translateY(-50%) translateX(-50%);
+    }
+    #editPic {
+      width: 1280px;
+      height: 720px;
+      display: block;
+      max-width: 100%;
+    }
+  </style>
+</head>
+
+<body style="background:#F5F5F5; margin:0; padding:0; height: 100vh;">
+  <div id="app" style="padding:10px;">
+    <div class="top" v-if="current_view=='search'">
+      <div class="criteria columns is-centered" style="align-items: center;">
+        <span class="column is-1" style="text-align:right;">
+          <label class="label">作業票番号</label>
+        </span>
+        <span class="column is-5">
+          <div class="field has-addons">
+            <div class="control is-expanded">
+              <input class="input" type="number" min="0" max="9999999" placeholder="親番">
+            </div>
+            <div class="control">
+              <input class="input" type="number" min="1" max="16" placeholder="枝番">
+            </div>
+          </div>
+        </span>
+        <span class="column is-1" style="text-align:right;"><label class="label">部品番号</label></span>
+        <span class="column is-3"><input class="input" type="text" placeholder="~を含む"></span>
+        <span class="column is-1">
+          <button class="button is-link" @click="search">
+            <span class="icon"><i class="fas fa-search"></i> </span>
+            <span>検索</span>
+          </button>
+        </span>
+      </div>
+      <hr />
+      <div class="columns is-centered" style="height: calc(100vh - 120px); overflow-y: scroll;">
+        <div class="column is-11" style="padding-bottom:10px;">
+          <table class="table is-fullwidth is-hoverable">
+            <thead>
+              <tr>
+                <th>アイテムコード</th>
+                <th>品名</th>
+                <th>品名カナ</th>
+                <th>得意先</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(r, index) in result" style="cursor: pointer;" @click="click_to_item">
+                <td>{{r.itemcode}}</td>
+                <td>{{r.itemname}}</td>
+                <td>{{r.kana}}</td>
+                <td>{{r.tokui}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="item" v-if="current_view!=='search'">
+      <div class="item_header">
+        <div class="columns" style="align-items: center;">
+          <div class="column is-narrow">
+            <button class="button is-link" @click="click_to_top">
+              <span class="icon"><i class="fas fa-arrow-alt-circle-left"></i></span>
+              <span>品番検索</span>
+            </button>
+          </div>
+          <div class="column is-narrow" style="text-align: right; font-size:large; font-weight: bold;">
+            <label>アイテムコード：</label><br />
+            <label>得意先名：</label>
+          </div>
+          <div class="column" style="font-size:large; font-weight: bold;">
+            <span>{{result[0].itemcode}}</span><br />
+            <span>{{result[0].tokui}}</span>
+          </div>
+          <div class="column is-narrow">
+            <span class="tag is-medium is-rounded is-danger" :class="{flash: flash}">ランクＡ・多工程</span>
+            <span class="tag is-medium is-rounded is-danger" :class="{flash: flash}">仕様変更</span>
+            <span class="tag is-medium is-rounded is-white">対策書</span>
+            <span class="tag is-medium is-rounded is-white">初物</span>
+            <span class="tag is-medium is-rounded is-white">高額材料</span>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="item_detail">
+        <div class="item_top columns" v-if="current_view=='item'">
+          <div class="column is-5">
+            <div class="columns">
+              <div class="column"><a class="button is-fullwidth is-link" href="5MVS336SF001-.pdf"
+                  target="_blank">図面議事録</a></div>
+              <div class="column"><a class="button is-fullwidth is-link" disabled>対策書発行履歴</a></div>
+              <div class="column"><a class="button is-fullwidth is-link" disabled>梱包仕様書</a></div>
+            </div>
+            <table class="table is-fullwidth is-hoverable">
+              <thead>
+                <tr>
+                  <th>工程行</th>
+                  <th title="シーケンス">SEQ</th>
+                  <th title="グループ">GRP</th>
+                  <th title="工順">ORD</th>
+                  <th>部署</th>
+                  <th>次工程行</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(r,index) in proc" @click="click_to_detail(index)" style="cursor: pointer;">
+                  <td>{{r.line}}</td>
+                  <td>{{r.SEQ}}</td>
+                  <td>{{r.GRP}}</td>
+                  <td>{{r.ORD}}</td>
+                  <td>{{r.place}}</td>
+                  <td>{{r.next}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="column">
+            <div class="columns is-centered">
+              <div class="column is-narrow">
+                <button class="button is-link" @click="--item_pic.current" :disabled="item_pic.current==0">
+                  <span class="icon"><i class="fas fa-caret-left"></i></span><span>前へ</span>
+                </button>
+              </div>
+              <div class="column" style="text-align: center;">
+                <button class="button is-link" @click="dlg_camera.isShow=true">写真追加</button>
+                <button class="button is-link">写真削除</button>
+              </div>
+              <div class="column is-narrow">
+                <button class="button is-link" @click="++item_pic.current"
+                  :disabled="item_pic.current==(item_pic.src.length-1)">
+                  <span>次へ</span>
+                  <span class="icon"><i class="fas fa-caret-right"></i></span>
+                </button>
+              </div>
+            </div>
+            <div>
+              <img title="完成品写真" :src="item_pic.src[item_pic.current]" />
+            </div>
+          </div>
+        </div>
+        <div class="item_detail columns is-gapless" v-if="current_view=='detail'">
+          <div class="text114 column is-4">
+            <div class="columns">
+              <div class="column">
+                <button class="button is-link" @click="click_to_item">
+                  <span class="icon"><i class="fas fa-arrow-alt-circle-left"></i></span>
+                  <span>製品Top</span>
+                </button>
+              </div>
+              <div class="column is-narrow">
+                <button class="button is-link" @click="current_line--" title="前工程行" :disabled="current_line==0">
+                  <span class="icon"><i class="fas fa-caret-left"></i></span>
+                </button>
+                <span style="font-size:large; line-height:35px;">工程行：{{current_line+1}}0</span>
+                <button class="button is-link" @click="current_line++" title="次工程行"
+                  :disabled="current_line==(proc.length-1)" style="margin-right:20px;">
+                  <span class="icon"><i class="fas fa-caret-right"></i></span>
+                </button>
+              </div>
+            </div>
+            <div style="height:calc(100vh - 190px); overflow-y:scroll;">
+              <table class="table is-fullwidth">
+                <thead>
+                  <tr>
+                    <th style="width:65px;">場所</th>
+                    <th style="width:65px;">工程</th>
+                    <th>詳細</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(r, index) in proc[current_line].detail">
+                    <td style="font-size:10pt;">{{r.workPlace}}</td>
+                    <td style="font-size:10pt;">{{r.procName}}</td>
+                    <td style="font-size:10pt;">{{r.detail}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="column">
+            <div class="columns">
+              <div class="column is-narrow">
+                <button class="button is-warning" disabled>QG(再発防止サンプル)</button>
+              </div>
+              <div class="column"></div>
+              <div class="column is-narrow">
+                <button class="button is-link">
+                  <span class="icon"><i class="fas fa-print"></i></span>
+                  <span>印刷</span>
+                </button>
+              </div>
+            </div>
+            <p style="margin-bottom:10px;">
+
+            </p>
+            <div class="tabs is-boxed is-fullwidth" style="margin-bottom:0;">
+              <ul>
+                <li :class="{'is-active': detail_proc=='shitadori'}"><a
+                    @click="detail_proc='shitadori'"><span>下取り</span></a></li>
+                <li :class="{'is-active': detail_proc=='hari'}"><a @click="detail_proc='hari'"><span>貼り</span></a></li>
+                <li :class="{'is-active': detail_proc=='press'}"><a @click="detail_proc='press'"><span>プレス</span></a>
+                </li>
+                <li :class="{'is-active': detail_proc=='shiage'}"><a @click="detail_proc='shiage'"><span>仕上げ</span></a>
+                </li>
+              </ul>
+            </div>
+            <div class="detail_tab_under" v-if="detail_proc=='shitadori'">
+              <div class="columns margin10">
+                <span class="column">
+                  <button class="button is-link is-fullwidth" @click="open_dlg_pic">
+                    <span class="icon"><i class="far fa-images"></i></span>
+                    <span>写真</span>
+                  </button>
+                </span>
+                <span class="column">
+                  <button class="button is-link is-fullwidth" @click="open_dlg_mov">
+                    <span class="icon"><i class="fas fa-video"></i></span>
+                    <span>動画</span></button>
+                </span>
+                <span class="column">
+                  <button class="button is-link is-fullwidth" @click="open_dlg_oth">
+                    <span class="icon"><i class="fas fa-paperclip"></i></span>
+                    <span>その他</span>
+                  </button>
+                </span>
+              </div>
+              <div class="tabs is-boxed" style="margin-bottom:0;">
+                <ul>
+                  <li :class="{'is-active': shitadori_proc=='#8800CH'}"><a
+                      @click="shitadori_proc='#8800CH'"><span>#8800CH</span></a></li>
+                  <li :class="{'is-active': shitadori_proc=='NO.500'}"><a
+                      @click="shitadori_proc='NO.500'"><span>NO.500</span></a></li>
+                  <li :class="{'is-active': shitadori_proc=='S10 t=0.1'}"><a
+                      @click="shitadori_proc='S10 t=0.1'"><span>S10 t=0.1</span></a></li>
+                  <li :class="{'is-active': shitadori_proc=='SC グレー t=10'}"><a
+                      @click="shitadori_proc='SC グレー t=10'"><span>SC グレー t=10</span></a></li>
+                </ul>
+              </div>
+              <div class="shitadori_tab_under " v-if="shitadori_proc=='#8800CH'">
+                <table class="table is-fullwidth is-bordered">
+                  <thead>
+                    <tr>
+                      <th>設備名</th>
+                      <th>標準段取</th>
+                      <th>速度</th>
+                      <th>角度</th>
+                      <th>巻方向・巻芯</th>
+                      <th>トルク</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><input class="input" value="M3"></td>
+                      <td><input class="input" type="number" value="00分" disabled></td>
+                      <td><input class="input" value="100"></td>
+                      <td><input class="input" value="30"></td>
+                      <td><input class="input" value=""></td>
+                      <td><input class="input" value=""></td>
+                    </tr>
+                    <tr>
+                      <td><input class="input" value="M2"></td>
+                      <td><input class="input" type="number" value="00分" disabled></td>
+                      <td><input class="input" value="100"></td>
+                      <td><input class="input" value="30"></td>
+                      <td><input class="input" value=""></td>
+                      <td><input class="input" value=""></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+              </div>
+              <div class="shitadori_tab_under" v-if="shitadori_proc=='NO.500'">
+                <table class="table is-fullwidth is-bordered">
+                  <thead>
+                    <tr>
+                      <th>設備名</th>
+                      <th>標準段取</th>
+                      <th>速度</th>
+                      <th>角度</th>
+                      <th>巻方向・巻芯</th>
+                      <th>トルク</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><input class="input" value="M3"></td>
+                      <td><input class="input" type="number" value="00分" disabled></td>
+                      <td><input class="input" value="50"></td>
+                      <td><input class="input" value="30"></td>
+                      <td><input class="input" value=""></td>
+                      <td><input class="input" value=""></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+              </div>
+              <div class="shitadori_tab_under" v-if="shitadori_proc=='S10 t=0.1'">
+                <table class="table is-fullwidth is-bordered">
+                  <thead>
+                    <tr>
+                      <th>設備名</th>
+                      <th>標準段取</th>
+                      <th>速度</th>
+                      <th>角度</th>
+                      <th>巻方向・巻芯</th>
+                      <th>トルク</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><input class="input" value="M1"></td>
+                      <td><input class="input" type="number" value="00分" disabled></td>
+                      <td><input class="input" value="50"></td>
+                      <td><input class="input" value="30"></td>
+                      <td><input class="input" value=""></td>
+                      <td><input class="input" value=""></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+              </div>
+              <div class="shitadori_tab_under" v-if="shitadori_proc=='SC グレー t=10'">
+                <table class="table is-fullwidth is-bordered">
+                  <thead>
+                    <tr>
+                      <th>設備名</th>
+                      <th>標準段取</th>
+                      <th>速度</th>
+                      <th>角度</th>
+                      <th>巻方向・巻芯</th>
+                      <th>トルク</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><input class="input" value="バーチ"></td>
+                      <td><input class="input" type="number" value="00分" disabled></td>
+                      <td><input class="input" value="50"></td>
+                      <td><input class="input" value="30"></td>
+                      <td><input class="input" value=""></td>
+                      <td><input class="input" value=""></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+              </div>
+            </div>
+            <div class="detail_tab_under" v-if="detail_proc=='hari'">
+              <div class="columns margin10">
+                <span class="column">
+                  <button class="button is-link is-fullwidth" @click="open_dlg_pic">
+                    <span class="icon"><i class="far fa-images"></i></span>
+                    <span>写真</span>
+                  </button>
+                </span>
+                <span class="column">
+                  <button class="button is-link is-fullwidth" @click="open_dlg_mov">
+                    <span class="icon"><i class="fas fa-video"></i></span>
+                    <span>動画</span></button>
+                </span>
+                <span class="column">
+                  <button class="button is-link is-fullwidth" @click="open_dlg_oth">
+                    <span class="icon"><i class="fas fa-paperclip"></i></span>
+                    <span>その他</span>
+                  </button>
+                </span>
+              </div>
+              <div class="tabs is-boxed" style="margin-bottom:0;">
+                <ul>
+                  <li :class="{'is-active': hari_proc=='L1'}"><a @click="hari_proc='L1'"><span>L1</span></a></li>
+                  <li :class="{'is-active': hari_proc=='L2'}"><a @click="hari_proc='L2'"><span>L2</span></a></li>
+                  <li :class="{'is-active': hari_proc=='L3'}"><a @click="hari_proc='L3'"><span>L3</span></a></li>
+                  <li><a><span><i class="fas fa-plus-square"></i></span></a></li>
+                </ul>
+              </div>
+              <div class="columns margin10">
+                <div class="column">
+                  <div class="field">
+                    <label class="label">標準段取</label>
+                    <div class="control">
+                      <input class="input" type="number" value="00分" disabled>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label class="label">貼り速度</label>
+                    <div class="control">
+                      <input class="input" type="number">
+                    </div>
+                  </div>
+                </div>
+                <div class="column">
+                  <div class="field">
+                    <label class="label">貼りテンション</label>
+                    <div class="control">
+                      <input class="input" type="number">
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label class="label">巻き方向・巻き芯</label>
+                    <div class="control">
+                      <input class="input" type="text">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="margin10">
+                <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+              </div>
+
+            </div>
+            <div class="detail_tab_under" v-if="detail_proc=='press'">
+              <div class="columns margin10">
+                <span class="column">
+                  <button class="button is-link is-fullwidth" @click="open_dlg_pic">
+                    <span class="icon"><i class="far fa-images"></i></span>
+                    <span>写真</span>
+                  </button>
+                </span>
+                <span class="column">
+                  <button class="button is-link is-fullwidth" @click="open_dlg_mov">
+                    <span class="icon"><i class="fas fa-video"></i></span>
+                    <span>動画</span></button>
+                </span>
+                <span class="column">
+                  <button class="button is-link is-fullwidth" @click="open_dlg_oth">
+                    <span class="icon"><i class="fas fa-paperclip"></i></span>
+                    <span>その他</span>
+                  </button>
+                </span>
+              </div>
+              <!--型関係
+              <div class="columns is-gapless dies">
+                <label class="label column is-narrow">　型コード：</label>
+                <span class="column"><input class="input is-fullwidth"></span>
+                <label class="label column is-narrow">　型Loc：</label>
+                <span class="column"><input class="input is-fullwidth"></span>
+                <label class="label column is-narrow">　治具Loc：</label>
+                <span class="column"><input class="input is-fullwidth"></span>
+                <label class="label column is-narrow">　型ステータス：</label>
+                <span class="column">
+                  <div class="select is-fullwidth">
+                    <select>
+                      <option selected>稼働中</option>
+                      <option>廃棄済</option>
+                      <option>修理中</option>
+                      <option>不動移動済</option>
+                    </select>
+                  </div>
+                </span>
+              </div>
+              -->
+              <div class="tabs is-boxed" style="margin-bottom:0;">
+                <ul>
+                  <li :class="{'is-active': press_proc=='16'}"><a @click="press_proc='16'"><span>16号機</span></a></li>
+                  <li :class="{'is-active': press_proc=='24'}"><a @click="press_proc='24'"><span>24号機</span></a></li>
+                  <li :class="{'is-active': press_proc=='32'}"><a @click="press_proc='32'"><span>32号機</span></a></li>
+                  <li><a><span><i class="fas fa-plus-square"></i></span></a></li>
+                </ul>
+              </div>
+              <div class="columns margin10">
+                <div class="column">
+                  <div class="field">
+                    <label class="label">標準段取</label>
+                    <div class="control">
+                      <input class="input" type="number" value="00分" disabled>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label class="label">回転数</label>
+                    <div class="control">
+                      <input class="input" type="number">
+                    </div>
+                  </div>
+                </div>
+                <div class="column">
+                  <div class="field">
+                    <label class="label">送りピッチ</label>
+                    <div class="control">
+                      <input class="input" type="number">
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label class="label">アクセルスピード</label>
+                    <div class="control">
+                      <input class="input" type="number">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="margin10">
+                <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+              </div>
+            </div>
+            <div class="detail_tab_under" v-if="detail_proc=='shiage'">
+              <div class="columns margin10">
+                <span class="column">
+                  <button class="button is-link is-fullwidth" @click="open_dlg_pic">
+                    <span class="icon"><i class="far fa-images"></i></span>
+                    <span>写真</span>
+                  </button>
+                </span>
+                <span class="column">
+                  <button class="button is-link is-fullwidth" @click="open_dlg_mov">
+                    <span class="icon"><i class="fas fa-video"></i></span>
+                    <span>動画</span></button>
+                </span>
+                <span class="column">
+                  <button class="button is-link is-fullwidth" @click="open_dlg_oth">
+                    <span class="icon"><i class="fas fa-paperclip"></i></span>
+                    <span>その他</span>
+                  </button>
+                </span>
+              </div>
+              <div class="margin10">
+                <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--ダイアログ-->
+    <div class="modal" :class="{'is-active': dlg_pic.isShow}">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">写真</p>
+          <button class="delete" aria-label="close" @click="dlg_pic.isShow=false"></button>
+        </header>
+        <section class="modal-card-body">
+          <div class="columns">
+            <div class="column is-6">
+              <div class="media-wrap">
+                <img src="https://placehold.jp/640x480.png">
+              </div>
+            </div>
+            <div class="column" style="height:calc(100vh - 210px);max-height:500px; overflow-y:scroll;">
+              <div class="media" @click="dlg_pic.current=0" :class="{'is-selected': dlg_pic.current==0}">
+                <div class="media-left">
+                  <figure class="image is-128x128">
+                    <img src="https://bulma.io/images/placeholders/128x128.png" alt="Placeholder image">
+                  </figure>
+                </div>
+                <div class="media-content">
+                  <div class="field has-addons mb-1">
+                    <div class="control is-expanded"><input class="input is-small is-fullwidth" placeholder="タイトル"></div>
+                    <div class="control"><input class="input is-small" placeholder="登録者名"></div>
+                  </div>
+                  <p class="subtitle is-6"><textarea class="textarea is-small" placeholder="コメント"></textarea></p>
+                </div>
+              </div>
+              <div class="media" @click="dlg_pic.current=1" :class="{'is-selected': dlg_pic.current==1}">
+                <div class="media-left">
+                  <figure class="image is-128x128">
+                    <img src="https://bulma.io/images/placeholders/128x128.png" alt="Placeholder image">
+                  </figure>
+                </div>
+                <div class="media-content">
+                  <div class="field has-addons mb-1">
+                    <div class="control is-expanded"><input class="input is-small is-fullwidth" value="突き切り機注意点"></div>
+                    <div class="control"><input class="input is-small" placeholder="登録者名"></div>
+                  </div>
+                  <p class="subtitle is-6">
+                    <textarea class="textarea is-small">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、</textarea>
+                  </p>
+                </div>
+              </div>
+              <div class="media" @click="dlg_pic.current=2" :class="{'is-selected': dlg_pic.current==2}">
+                <div class="media-left">
+                  <figure class="image is-128x128">
+                    <img src="https://bulma.io/images/placeholders/128x128.png" alt="Placeholder image">
+                  </figure>
+                </div>
+                <div class="media-content">
+                  <div class="field has-addons mb-1">
+                    <div class="control is-expanded"><input class="input is-small is-fullwidth" value="ワイドの注意点"></div>
+                    <div class="control"><input class="input is-small" placeholder="登録者名"></div>
+                  </div>
+                  <p class="subtitle is-6">
+                    <textarea class="textarea is-small">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、</textarea>
+                  </p>
+                </div>
+              </div>
+              <div class="media" @click="dlg_pic.current=3" :class="{'is-selected': dlg_pic.current==3}">
+                <div class="media-left">
+                  <figure class="image is-128x128">
+                    <img src="https://bulma.io/images/placeholders/128x128.png" alt="Placeholder image">
+                  </figure>
+                </div>
+                <div class="media-content">
+                  <div class="field has-addons mb-1">
+                    <div class="control is-expanded"><input class="input is-small is-fullwidth" value="シャーリング注意点"></div>
+                    <div class="control"><input class="input is-small" placeholder="登録者名"></div>
+                  </div>
+                  <p class="subtitle is-6">
+                    <textarea class="textarea is-small">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、</textarea>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button" @click="">削除</button>
+          <button class="button" @click="">追加</button>
+          <button class="button" @click="dlg_pic.isShow=false">閉じる</button>
+        </footer>
+      </div>
+    </div>
+
+    <div class="modal" :class="{'is-active': dlg_mov.isShow}">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">動画</p>
+          <button class="delete" aria-label="close" @click="dlg_mov.isShow=false"></button>
+        </header>
+        <section class="modal-card-body">
+          <div class="columns">
+            <div class="column is-7">
+              <div class="media-wrap">
+                <video src="mov/shiage.mp4" controls v-if="dlg_mov.current==0"></video>
+                <video src="mov/slit.mp4" controls v-if="dlg_mov.current==1"></video>
+                <video src="mov/Wildlife.mp4" controls v-if="dlg_mov.current==2"></video>
+              </div>
+            </div>
+            <div class="column" style="height:calc(100vh - 210px);max-height:500px; overflow-y:scroll;">
+              <div class="media" @click="dlg_mov.current=0" :class="{'is-selected': dlg_mov.current==0}">
+                <div class="media-left">
+                  <figure class="image is-128x128">
+                    <img src="https://bulma.io/images/placeholders/128x128.png" alt="Placeholder image">
+                  </figure>
+                </div>
+                <div class="media-content">
+                  <div class="field has-addons mb-1">
+                    <div class="control"><input class="input is-small" placeholder="タイトル"></div>
+                    <div class="control"><input class="input is-small" placeholder="登録者名"></div>
+                  </div>
+                  <p class="subtitle is-6"><textarea class="textarea is-small" placeholder="コメント"></textarea></p>
+                </div>
+              </div>
+              <div class="media" @click="dlg_mov.current=1" :class="{'is-selected': dlg_mov.current==1}">
+                <div class="media-left">
+                  <figure class="image is-128x128">
+                    <img src="https://bulma.io/images/placeholders/128x128.png" alt="Placeholder image">
+                  </figure>
+                </div>
+                <div class="media-content">
+                  <div class="field has-addons mb-1">
+                    <div class="control"><input class="input is-small" value="スリット"></div>
+                    <div class="control"><input class="input is-small" placeholder="登録者名"></div>
+                  </div>
+                  <p class="subtitle is-6">
+                    <textarea class="textarea is-small">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、</textarea>
+                  </p>
+                </div>
+              </div>
+              <div class="media" @click="dlg_mov.current=2" :class="{'is-selected': dlg_mov.current==2}">
+                <div class="media-left">
+                  <figure class="image is-128x128">
+                    <img src="https://bulma.io/images/placeholders/128x128.png" alt="Placeholder image">
+                  </figure>
+                </div>
+                <div class="media-content">
+                  <div class="field has-addons mb-1">
+                    <div class="control"><input class="input is-small" value="デモムービー"></div>
+                    <div class="control"><input class="input is-small" placeholder="登録者名"></div>
+                  </div>
+                  <p class="subtitle is-6">
+                    <textarea class="textarea is-small">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、</textarea>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button" @click="">削除</button>
+          <button class="button" @click="">追加</button>
+          <button class="button" @click="dlg_mov.isShow=false">閉じる</button>
+        </footer>
+      </div>
+    </div>
+
+    <div class="modal" :class="{'is-active': dlg_oth.isShow}">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">その他</p>
+          <button class="delete" aria-label="close" @click=" dlg_oth.isShow=false"></button>
+        </header>
+        <section class="modal-card-body">
+          <div class="file is-link">
+            <label class="file-label">
+              <input class="file-input" type="file" name="resume">
+              <span class="file-cta">
+                <span class="file-icon">
+                  <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                  ファイル追加
+                </span>
+              </span>
+            </label>
+          </div>
+          <table class="table is-fullwidth is-hoverable">
+            <thead>
+              <tr>
+                <th>ファイル名</th>
+                <th class="is-narrow">拡張子</th>
+                <th class="is-narrow">登録者</th>
+                <th class="is-narrow">削除</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>○○○○○</td>
+                <td class="is-narrow">docx</td>
+                <td class="is-narrow">田島</td>
+                <td class="is-narrow"><button class="button is-small"><span class="icon"><i class="fas fa-trash-alt"></i></span></button></td>
+              </tr>
+              <tr>
+                <td>×××××</td>
+                <td class="is-narrow">xlsx</td>
+                <td class="is-narrow">田島</td>
+                <td class="is-narrow"><button class="button is-small"><span class="icon"><i class="fas fa-trash-alt"></i></span></button></td>
+              </tr>
+              <tr>
+                <td>△△△△△</td>
+                <td class="is-narrow">pdf</td>
+                <td class="is-narrow">田島</td>
+                <td class="is-narrow"><button class="button is-small"><span class="icon"><i class="fas fa-trash-alt"></i></span></button></td>
+              </tr>
+              <tr>
+                <td>□□□□□</td>
+                <td class="is-narrow">png</td>
+                <td class="is-narrow">田島</td>
+                <td class="is-narrow"><button class="button is-small"><span class="icon"><i class="fas fa-trash-alt"></i></span></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button" @click="dlg_oth.isShow=false">閉じる</button>
+        </footer>
+      </div>
+    </div>
+
+    <!--写真撮影・画像編集-->
+    <div class="modal" :class="{'is-active': dlg_camera.isShow}">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">写真撮影・編集</p>
+          <button class="delete" aria-label="close" @click="closeCamera"></button>
+        </header>
+        <section class="modal-card-body">
+          <video id="camera" width="1280" height="720" autoplay playsinline="true" v-show="!dlg_camera.isEdit"></video>
+          <canvas id="cvs" width="1280" height="720" style="display:none;"></canvas>
+          <div>
+            <img id="editPic" :src="dlg_camera.picData" v-if="dlg_camera.isEdit"/>
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <button class="button" @click="shutter" :disabled="dlg_camera.isEdit">シャッター</button>
+          <button class="button" @click="delPic" :disabled="!dlg_camera.isEdit">取り直し</button>
+          <button class="button" @click="addPic" :disabled="!dlg_camera.isEdit">登録</button>
+          <button class="button" @click="closeCamera">閉じる</button>
+        </footer>
+      </div>
+    </div>
+
+
+  </div>
+  <script src="js.js"></script>
+</body>
+
+</html>
