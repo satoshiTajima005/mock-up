@@ -31,7 +31,12 @@
     * {
       font-family: 'Meiryo UI';
     }
-
+    body {
+      background:#F5F5F5;
+      margin:0;
+      padding:0;
+      height: 100vh;
+    }
     hr {
       border-color: #ddd;
       background-color: #ddd;
@@ -135,15 +140,35 @@
       max-width: 100%;
     }
 
+    .headers {
+      font-size: large;
+      font-weight: bold;
+    }
+
+    .no-display {
+      display: none;
+    }
+    .procstep{
+      height:calc(100vh - 190px);
+      overflow-y:scroll;
+    }
     @media print {
       .no-print {
         display: none;
+      }
+
+      .no-display {
+        display: block;
+      }
+      .procstep, .detail_tab_under{
+        height:auto;
+        overflow-y:visible;
       }
     }
   </style>
 </head>
 
-<body style="background:#F5F5F5; margin:0; padding:0; height: 100vh;">
+<body>
   <div id="app" style="padding:10px;">
     <div class="top" v-if="current_view=='search'">
       <div class="criteria columns is-centered" style="align-items: center;">
@@ -202,14 +227,21 @@
               <span>品番検索</span>
             </button>
           </div>
-          <div class="column is-narrow" style="text-align: right; font-size:large; font-weight: bold;">
+          <div class="column is-narrow headers" style="text-align: right;">
             <label>アイテムコード：</label><br />
             <label>得意先名：</label>
           </div>
-          <div class="column" style="font-size:large; font-weight: bold;">
+          <div class="column is-narrow headers">
             <span>{{result[0].itemcode}}</span><br />
             <span>{{result[0].tokui}}</span>
           </div>
+          <div class="column is-narrow headers no-display" style="text-align: right;">
+            <label>工程行：</label><br />
+          </div>
+          <div class="column is-narrow headers no-display">
+            <span>{{current_line+1}}0</span><br />
+          </div>
+          <div class="column"></div>
           <div class="column is-narrow">
             <span class="tag is-medium is-rounded is-danger" :class="{flash: flash}">ランクＡ・多工程</span>
             <span class="tag is-medium is-rounded is-danger" :class="{flash: flash}">仕様変更</span>
@@ -285,18 +317,19 @@
                   <span>製品Top</span>
                 </button>
               </div>
-              <div class="column is-narrow">
-                <button class="button is-link no-print" @click="current_line--" title="前工程行" :disabled="current_line==0">
+              <div class="column is-narrow no-print">
+                <button class="button is-link" @click="current_line--" title="前工程行"
+                  :disabled="current_line==0">
                   <span class="icon"><i class="fas fa-caret-left"></i></span>
                 </button>
                 <span style="font-size:large; line-height:35px;">工程行：{{current_line+1}}0</span>
-                <button class="button is-link no-print" @click="current_line++" title="次工程行"
+                <button class="button is-link" @click="current_line++" title="次工程行"
                   :disabled="current_line==(proc.length-1)" style="margin-right:20px;">
                   <span class="icon"><i class="fas fa-caret-right"></i></span>
                 </button>
               </div>
             </div>
-            <div style="height:calc(100vh - 190px); overflow-y:scroll;">
+            <div class="procstep">
               <table class="table is-fullwidth">
                 <thead>
                   <tr>
@@ -316,12 +349,12 @@
             </div>
           </div>
           <div class="column">
-            <div class="columns no-print">
-              <div class="column is-narrow">
+            <div class="columns">
+              <div class="column is-narrow no-print">
                 <button class="button is-warning" disabled>QG(再発防止サンプル)</button>
               </div>
-              <div class="column"></div>
-              <div class="column is-narrow">
+              <div class="column no-print"></div>
+              <div class="column is-narrow no-print">
                 <button class="button is-link" @click="print">
                   <span class="icon"><i class="fas fa-print"></i></span>
                   <span>印刷</span>
