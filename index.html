@@ -15,12 +15,17 @@
   <script src="./node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js"></script>
   <script src="./node_modules/@ckeditor/ckeditor5-vue2/dist/ckeditor.js"></script>
   <script src="./node_modules/@ckeditor/ckeditor5-build-classic/build/translations/ja.js"></script>
-    
-  <!--cropper-->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js" integrity="sha512-FHa4dxvEkSR0LOFH/iFH0iSqlYHf/iTwLc5Ws/1Su1W90X0qnxFxciJimoue/zyOA/+Qz/XQmmKqjbubAAzpkA==" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.css" integrity="sha512-NCJ1O5tCMq4DK670CblvRiob3bb5PAxJ7MALAz2cV40T9RgNMrJSAwJKy0oz20Wu7TDn9Z2WnveirOeHmpaIlA==" crossorigin="anonymous" />
 
-  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+  <!--cropper-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"
+    integrity="sha512-FHa4dxvEkSR0LOFH/iFH0iSqlYHf/iTwLc5Ws/1Su1W90X0qnxFxciJimoue/zyOA/+Qz/XQmmKqjbubAAzpkA=="
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.css"
+    integrity="sha512-NCJ1O5tCMq4DK670CblvRiob3bb5PAxJ7MALAz2cV40T9RgNMrJSAwJKy0oz20Wu7TDn9Z2WnveirOeHmpaIlA=="
+    crossorigin="anonymous" />
+
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.css">
   <style>
     * {
@@ -110,21 +115,30 @@
       background: #ffc;
     }
 
-    .media-wrap{
-      position:relative;
-      height:100%;
+    .media-wrap {
+      position: relative;
+      height: 100%;
     }
-    .media-wrap img, .media-wrap video{
-      position:absolute;
-      top:50%;
-      left:50%;
-      transform:translateY(-50%) translateX(-50%);
+
+    .media-wrap img,
+    .media-wrap video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translateY(-50%) translateX(-50%);
     }
+
     #editPic {
       width: 1280px;
       height: 720px;
       display: block;
       max-width: 100%;
+    }
+
+    @media print {
+      .no-print {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -182,7 +196,7 @@
     <div class="item" v-if="current_view!=='search'">
       <div class="item_header">
         <div class="columns" style="align-items: center;">
-          <div class="column is-narrow">
+          <div class="column is-narrow no-print">
             <button class="button is-link" @click="click_to_top">
               <span class="icon"><i class="fas fa-arrow-alt-circle-left"></i></span>
               <span>品番検索</span>
@@ -265,18 +279,18 @@
         <div class="item_detail columns is-gapless" v-if="current_view=='detail'">
           <div class="text114 column is-4">
             <div class="columns">
-              <div class="column">
+              <div class="column no-print">
                 <button class="button is-link" @click="click_to_item">
                   <span class="icon"><i class="fas fa-arrow-alt-circle-left"></i></span>
                   <span>製品Top</span>
                 </button>
               </div>
               <div class="column is-narrow">
-                <button class="button is-link" @click="current_line--" title="前工程行" :disabled="current_line==0">
+                <button class="button is-link no-print" @click="current_line--" title="前工程行" :disabled="current_line==0">
                   <span class="icon"><i class="fas fa-caret-left"></i></span>
                 </button>
                 <span style="font-size:large; line-height:35px;">工程行：{{current_line+1}}0</span>
-                <button class="button is-link" @click="current_line++" title="次工程行"
+                <button class="button is-link no-print" @click="current_line++" title="次工程行"
                   :disabled="current_line==(proc.length-1)" style="margin-right:20px;">
                   <span class="icon"><i class="fas fa-caret-right"></i></span>
                 </button>
@@ -302,7 +316,7 @@
             </div>
           </div>
           <div class="column">
-            <div class="columns">
+            <div class="columns no-print">
               <div class="column is-narrow">
                 <button class="button is-warning" disabled>QG(再発防止サンプル)</button>
               </div>
@@ -314,7 +328,7 @@
                 </button>
               </div>
             </div>
-            <p style="margin-bottom:10px;">
+            <p class="no-print" style="margin-bottom:10px;">
 
             </p>
             <div class="tabs is-boxed is-fullwidth" style="margin-bottom:0;">
@@ -329,7 +343,7 @@
               </ul>
             </div>
             <div class="detail_tab_under" v-if="detail_proc=='shitadori'">
-              <div class="columns margin10">
+              <div class="columns margin10 no-print">
                 <span class="column">
                   <button class="button is-link is-fullwidth" @click="open_dlg_pic">
                     <span class="icon"><i class="far fa-images"></i></span>
@@ -470,7 +484,7 @@
               </div>
             </div>
             <div class="detail_tab_under" v-if="detail_proc=='hari'">
-              <div class="columns margin10">
+              <div class="columns margin10 no-print">
                 <span class="column">
                   <button class="button is-link is-fullwidth" @click="open_dlg_pic">
                     <span class="icon"><i class="far fa-images"></i></span>
@@ -533,7 +547,7 @@
 
             </div>
             <div class="detail_tab_under" v-if="detail_proc=='press'">
-              <div class="columns margin10">
+              <div class="columns margin10 no-print">
                 <span class="column">
                   <button class="button is-link is-fullwidth" @click="open_dlg_pic">
                     <span class="icon"><i class="far fa-images"></i></span>
@@ -616,7 +630,7 @@
               </div>
             </div>
             <div class="detail_tab_under" v-if="detail_proc=='shiage'">
-              <div class="columns margin10">
+              <div class="columns margin10 no-print">
                 <span class="column">
                   <button class="button is-link is-fullwidth" @click="open_dlg_pic">
                     <span class="icon"><i class="far fa-images"></i></span>
@@ -668,7 +682,8 @@
                 </div>
                 <div class="media-content">
                   <div class="field has-addons mb-1">
-                    <div class="control is-expanded"><input class="input is-small is-fullwidth" placeholder="タイトル"></div>
+                    <div class="control is-expanded"><input class="input is-small is-fullwidth" placeholder="タイトル">
+                    </div>
                     <div class="control"><input class="input is-small" placeholder="登録者名"></div>
                   </div>
                   <p class="subtitle is-6"><textarea class="textarea is-small" placeholder="コメント"></textarea></p>
@@ -686,7 +701,8 @@
                     <div class="control"><input class="input is-small" placeholder="登録者名"></div>
                   </div>
                   <p class="subtitle is-6">
-                    <textarea class="textarea is-small">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、</textarea>
+                    <textarea
+                      class="textarea is-small">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、</textarea>
                   </p>
                 </div>
               </div>
@@ -702,7 +718,8 @@
                     <div class="control"><input class="input is-small" placeholder="登録者名"></div>
                   </div>
                   <p class="subtitle is-6">
-                    <textarea class="textarea is-small">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、</textarea>
+                    <textarea
+                      class="textarea is-small">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、</textarea>
                   </p>
                 </div>
               </div>
@@ -718,7 +735,8 @@
                     <div class="control"><input class="input is-small" placeholder="登録者名"></div>
                   </div>
                   <p class="subtitle is-6">
-                    <textarea class="textarea is-small">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、</textarea>
+                    <textarea
+                      class="textarea is-small">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、</textarea>
                   </p>
                 </div>
               </div>
@@ -776,7 +794,8 @@
                     <div class="control"><input class="input is-small" placeholder="登録者名"></div>
                   </div>
                   <p class="subtitle is-6">
-                    <textarea class="textarea is-small">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、</textarea>
+                    <textarea
+                      class="textarea is-small">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、</textarea>
                   </p>
                 </div>
               </div>
@@ -792,7 +811,8 @@
                     <div class="control"><input class="input is-small" placeholder="登録者名"></div>
                   </div>
                   <p class="subtitle is-6">
-                    <textarea class="textarea is-small">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、</textarea>
+                    <textarea
+                      class="textarea is-small">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、</textarea>
                   </p>
                 </div>
               </div>
@@ -842,25 +862,29 @@
                 <td>○○○○○</td>
                 <td class="is-narrow">docx</td>
                 <td class="is-narrow">田島</td>
-                <td class="is-narrow"><button class="button is-small"><span class="icon"><i class="fas fa-trash-alt"></i></span></button></td>
+                <td class="is-narrow"><button class="button is-small"><span class="icon"><i
+                        class="fas fa-trash-alt"></i></span></button></td>
               </tr>
               <tr>
                 <td>×××××</td>
                 <td class="is-narrow">xlsx</td>
                 <td class="is-narrow">田島</td>
-                <td class="is-narrow"><button class="button is-small"><span class="icon"><i class="fas fa-trash-alt"></i></span></button></td>
+                <td class="is-narrow"><button class="button is-small"><span class="icon"><i
+                        class="fas fa-trash-alt"></i></span></button></td>
               </tr>
               <tr>
                 <td>△△△△△</td>
                 <td class="is-narrow">pdf</td>
                 <td class="is-narrow">田島</td>
-                <td class="is-narrow"><button class="button is-small"><span class="icon"><i class="fas fa-trash-alt"></i></span></button></td>
+                <td class="is-narrow"><button class="button is-small"><span class="icon"><i
+                        class="fas fa-trash-alt"></i></span></button></td>
               </tr>
               <tr>
                 <td>□□□□□</td>
                 <td class="is-narrow">png</td>
                 <td class="is-narrow">田島</td>
-                <td class="is-narrow"><button class="button is-small"><span class="icon"><i class="fas fa-trash-alt"></i></span></button></td>
+                <td class="is-narrow"><button class="button is-small"><span class="icon"><i
+                        class="fas fa-trash-alt"></i></span></button></td>
               </tr>
             </tbody>
           </table>
@@ -883,7 +907,7 @@
           <video id="camera" width="1280" height="720" autoplay playsinline="true" v-show="!dlg_camera.isEdit"></video>
           <canvas id="cvs" width="1280" height="720" style="display:none;"></canvas>
           <div>
-            <img id="editPic" :src="dlg_camera.picData" v-if="dlg_camera.isEdit"/>
+            <img id="editPic" :src="dlg_camera.picData" v-if="dlg_camera.isEdit" />
           </div>
         </section>
         <footer class="modal-card-foot">
