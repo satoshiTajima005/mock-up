@@ -523,6 +523,9 @@ var app = new Vue({
         me.flash = false;
       }, 3000);
     },
+    print: function(){
+      window.print();
+    },
     click_to_item: function () {
       this.current_view = 'item';
       this.run_flash();
@@ -566,9 +569,6 @@ var app = new Vue({
       this.dlg_camera.picData = '';
       this.dlg_camera.isEdit = false;
     },
-    startEdit: function(){
-      
-    },
     addPic: function(){
       this.item_pic.src.push(this.dlg_camera.picData);
       this.closeCamera();
@@ -577,9 +577,6 @@ var app = new Vue({
       this.dlg_camera.picData = '';
       this.dlg_camera.isEdit = false;
       this.dlg_camera.isShow = false;
-    },
-    mountCamera: function(){
-
     }
   }
 });
