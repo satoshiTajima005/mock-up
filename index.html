@@ -31,12 +31,14 @@
     * {
       font-family: 'Meiryo UI';
     }
+
     body {
-      background:#F5F5F5;
-      margin:0;
-      padding:0;
+      background: #F5F5F5;
+      margin: 0;
+      padding: 0;
       height: 100vh;
     }
+
     hr {
       border-color: #ddd;
       background-color: #ddd;
@@ -148,11 +150,19 @@
     .no-display {
       display: none;
     }
-    .procstep{
-      height:calc(100vh - 190px);
-      overflow-y:scroll;
+
+    .procstep {
+      height: calc(100vh - 190px);
+      overflow-y: scroll;
     }
+
     @media print {
+      body {
+        size: A4 landscape;
+        zoom: 77%;
+        height: auto;
+      }
+
       .no-print {
         display: none;
       }
@@ -160,9 +170,11 @@
       .no-display {
         display: block;
       }
-      .procstep, .detail_tab_under{
-        height:auto;
-        overflow-y:visible;
+
+      .procstep,
+      .detail_tab_under {
+        height: auto;
+        overflow-y: visible;
       }
     }
   </style>
@@ -237,9 +249,11 @@
           </div>
           <div class="column is-narrow headers no-display" style="text-align: right;">
             <label>工程行：</label><br />
+            <label>&nbsp;</label>
           </div>
           <div class="column is-narrow headers no-display">
             <span>{{current_line+1}}0</span><br />
+            <span>&nbsp;</span>
           </div>
           <div class="column"></div>
           <div class="column is-narrow">
@@ -318,8 +332,7 @@
                 </button>
               </div>
               <div class="column is-narrow no-print">
-                <button class="button is-link" @click="current_line--" title="前工程行"
-                  :disabled="current_line==0">
+                <button class="button is-link" @click="current_line--" title="前工程行" :disabled="current_line==0">
                   <span class="icon"><i class="fas fa-caret-left"></i></span>
                 </button>
                 <span style="font-size:large; line-height:35px;">工程行：{{current_line+1}}0</span>
@@ -361,9 +374,8 @@
                 </button>
               </div>
             </div>
-            <p class="no-print" style="margin-bottom:10px;">
+            <p class="no-print" style="margin-bottom:10px;"></p>
 
-            </p>
             <div class="tabs is-boxed is-fullwidth" style="margin-bottom:0;">
               <ul>
                 <li :class="{'is-active': detail_proc=='shitadori'}"><a
@@ -376,19 +388,19 @@
               </ul>
             </div>
             <div class="detail_tab_under" v-if="detail_proc=='shitadori'">
-              <div class="columns margin10 no-print">
-                <span class="column">
+              <div class="columns margin10">
+                <span class="column no-print">
                   <button class="button is-link is-fullwidth" @click="open_dlg_pic">
                     <span class="icon"><i class="far fa-images"></i></span>
                     <span>写真</span>
                   </button>
                 </span>
-                <span class="column">
+                <span class="column no-print">
                   <button class="button is-link is-fullwidth" @click="open_dlg_mov">
                     <span class="icon"><i class="fas fa-video"></i></span>
                     <span>動画</span></button>
                 </span>
-                <span class="column">
+                <span class="column no-print">
                   <button class="button is-link is-fullwidth" @click="open_dlg_oth">
                     <span class="icon"><i class="fas fa-paperclip"></i></span>
                     <span>その他</span>
@@ -517,19 +529,19 @@
               </div>
             </div>
             <div class="detail_tab_under" v-if="detail_proc=='hari'">
-              <div class="columns margin10 no-print">
-                <span class="column">
+              <div class="columns margin10">
+                <span class="column no-print">
                   <button class="button is-link is-fullwidth" @click="open_dlg_pic">
                     <span class="icon"><i class="far fa-images"></i></span>
                     <span>写真</span>
                   </button>
                 </span>
-                <span class="column">
+                <span class="column no-print">
                   <button class="button is-link is-fullwidth" @click="open_dlg_mov">
                     <span class="icon"><i class="fas fa-video"></i></span>
                     <span>動画</span></button>
                 </span>
-                <span class="column">
+                <span class="column no-print">
                   <button class="button is-link is-fullwidth" @click="open_dlg_oth">
                     <span class="icon"><i class="fas fa-paperclip"></i></span>
                     <span>その他</span>
@@ -580,19 +592,19 @@
 
             </div>
             <div class="detail_tab_under" v-if="detail_proc=='press'">
-              <div class="columns margin10 no-print">
-                <span class="column">
+              <div class="columns margin10">
+                <span class="column no-print">
                   <button class="button is-link is-fullwidth" @click="open_dlg_pic">
                     <span class="icon"><i class="far fa-images"></i></span>
                     <span>写真</span>
                   </button>
                 </span>
-                <span class="column">
+                <span class="column no-print">
                   <button class="button is-link is-fullwidth" @click="open_dlg_mov">
                     <span class="icon"><i class="fas fa-video"></i></span>
                     <span>動画</span></button>
                 </span>
-                <span class="column">
+                <span class="column no-print">
                   <button class="button is-link is-fullwidth" @click="open_dlg_oth">
                     <span class="icon"><i class="fas fa-paperclip"></i></span>
                     <span>その他</span>
@@ -663,19 +675,19 @@
               </div>
             </div>
             <div class="detail_tab_under" v-if="detail_proc=='shiage'">
-              <div class="columns margin10 no-print">
-                <span class="column">
+              <div class="columns margin10">
+                <span class="column no-print">
                   <button class="button is-link is-fullwidth" @click="open_dlg_pic">
                     <span class="icon"><i class="far fa-images"></i></span>
                     <span>写真</span>
                   </button>
                 </span>
-                <span class="column">
+                <span class="column no-print">
                   <button class="button is-link is-fullwidth" @click="open_dlg_mov">
                     <span class="icon"><i class="fas fa-video"></i></span>
                     <span>動画</span></button>
                 </span>
-                <span class="column">
+                <span class="column no-print">
                   <button class="button is-link is-fullwidth" @click="open_dlg_oth">
                     <span class="icon"><i class="fas fa-paperclip"></i></span>
                     <span>その他</span>
