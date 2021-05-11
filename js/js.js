@@ -149,8 +149,7 @@ var app = new Vue({
       this.closeCamera();
     },
     closeCamera: function(){
-      this.dlg_camera.picData = '';
-      this.dlg_camera.isEdit = false;
+      this.delPic();
       this.dlg_camera.isShow = false;
     }
   }
