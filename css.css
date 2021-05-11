@@ -1,0 +1,149 @@
+* {
+  font-family: 'Meiryo UI';
+}
+
+body {
+  background: #F5F5F5;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+}
+
+hr {
+  border-color: #ddd;
+  background-color: #ddd;
+}
+
+.flash {
+  animation: flash 1s linear infinite;
+}
+
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+.detail_tab_under {
+  height: calc(100vh - 230px);
+  width: 100%;
+  background-color: #FFF;
+  border: 1px solid rgb(219, 219, 219);
+  border-top: 0;
+  border-radius: 4px;
+  overflow-y: scroll;
+}
+
+.margin10 {
+  margin: 10px;
+}
+
+.shitadori_tab_under {
+  padding: 10px;
+}
+
+.modal-card {
+  min-width: 950px;
+  max-width: 1150px;
+  width: 70%;
+}
+
+.dies label {
+  text-align: right;
+  line-height: 37px;
+}
+
+.modal-card-foot {
+  justify-content: flex-end;
+}
+
+.carousel {
+  display: flex;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+}
+
+.carousel img {
+  width: 100vw;
+  height: 60vh;
+  object-fit: cover;
+  scroll-snap-align: start;
+}
+
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.btns {
+  display: flex;
+  justify-content: center;
+  padding: 8px;
+}
+
+.btns button {
+  margin: 0px 4px;
+}
+
+.is-selected {
+  background: #ffc;
+}
+
+.media-wrap {
+  position: relative;
+  height: 100%;
+}
+
+.media-wrap img,
+.media-wrap video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+}
+
+#editPic {
+  width: 1280px;
+  height: 720px;
+  display: block;
+  max-width: 100%;
+}
+
+.headers {
+  font-size: large;
+  font-weight: bold;
+}
+
+.no-display {
+  display: none;
+}
+
+.procstep {
+  height: calc(100vh - 190px);
+  overflow-y: scroll;
+}
+
+@media print {
+  body {
+    size: A4 landscape;
+    zoom: 77%;
+    height: auto;
+  }
+
+  .no-print {
+    display: none;
+  }
+
+  .no-display {
+    display: block;
+  }
+
+  .procstep,
+  .detail_tab_under {
+    height: auto;
+    overflow-y: visible;
+  }
+}
