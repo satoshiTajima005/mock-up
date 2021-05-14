@@ -34,53 +34,43 @@ var app = new Vue({
       current: 0,
       src: [
         "img/Koala.jpg",
-        "img/Lighthouse.jpg",
-        "img/Penguins.jpg",
-        "img/Tulips.jpg",
-        "img/Chrysanthemum.jpg",
-        "img/Desert.jpg",
-        "img/Hydrangeas.jpg",
-        "img/Jellyfish.jpg"
+        "img/Lighthouse.jpg"
       ]
     },
     dlg_camera: {
+      video: {},
+      fb: null,
       isShow: false,
-      isEdit: false,
-      picData: ""
+      isEdit: false
     }
   },
-  mounted:function(){
-    const me = this;
-    this.$nextTick(function () {
-      if (navigator.mediaDevices){
-        this.video  = document.querySelector("#camera");
-        this.canvas = document.querySelector("#cvs");
-      
-        /** カメラ設定 */
-        const constraints = {
-          audio: false,
-          video: {
-            width: 1280,
-            height: 720,
-            //facingMode: "user"   // フロントカメラを利用する
-            facingMode: "environment"  // リアカメラを利用する場合
-          }
-        };
-      
-        //カメラを<video>と同期
-        const me = this;
-        navigator.mediaDevices.getUserMedia(constraints).then(function(stream){
-          me.video.srcObject = stream;
-          me.video.onloadedmetadata = function(e){
-            me.video.play();
-          };
-        }).catch(function(err){
-          console.log(err.name + ": " + err.message);
-        });
-      }
+  mounted: function () {
+    if (navigator.mediaDevices) {
+      this.dlg_camera.video = document.querySelector("#camera");
 
-      Vue.use(CKEditor);
-    });
+      /** カメラ設定 */
+      const constraints = {
+        audio: false,
+        video: {
+          width: 1280,
+          height: 720,
+          facingMode: "environment" // リアカメラを利用する場合
+        }
+      };
+
+      //カメラを<video>と同期
+      const v = this.dlg_camera.video;
+      navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
+        v.srcObject = stream;
+        v.onloadedmetadata = function (e) {
+          v.play();
+        };
+      }).catch(function (err) {
+        console.log(err.name + ": " + err.message);
+      });
+    }
+
+    Vue.use(CKEditor);
   },
   methods: {
     search: function () {
@@ -91,14 +81,14 @@ var app = new Vue({
       this.current_view = 'search'
       this.current_line = 0;
     },
-    run_flash: function(){
+    run_flash: function () {
       this.flash = true;
       let me = this;
       setTimeout(function () {
         me.flash = false;
       }, 3000);
     },
-    print: function(){
+    print: function () {
       window.print();
     },
     click_to_item: function () {
@@ -110,6 +100,11 @@ var app = new Vue({
       this.current_line = line;
       this.run_flash();
     },
+    delPic: function () {
+      if (!confirm('表示中の写真を削除しますか？')) return;
+      this.item_pic.src.splice(this.item_pic.current, 1);
+      this.item_pic.current = 0;
+    },
     open_dlg_pic: function () {
       this.dlg_pic.isShow = true;
     },
@@ -119,37 +114,50 @@ var app = new Vue({
     open_dlg_oth: function () {
       this.dlg_oth.isShow = true;
     },
-    shutter: function(){
-      const ctx = this.canvas.getContext("2d");
-      ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
-      this.dlg_camera.picData = this.canvas.toDataURL("image/png");
+    shutter: function () {
       this.dlg_camera.isEdit = true;
-      /*
-      const image = document.getElementById('editPic');
-      const cropper = new Cropper(image, {
-        aspectRatio: 16 / 9,
-        crop(event) {
-          console.log(event.detail.x);
-          console.log(event.detail.y);
-          console.log(event.detail.width);
-          console.log(event.detail.height);
-          console.log(event.detail.rotate);
-          console.log(event.detail.scaleX);
-          console.log(event.detail.scaleY);
-        },
+
+      //再描画した後にCVS取得しFabric設定(ロード時にはエレメントが無いから)
+      this.$nextTick(function () {
+        //fbの初期設定と設定のcanvasをVue登録
+        if (this.dlg_camera.fb == null){
+          this.dlg_camera.fb = new fabric.Canvas("cvs", {
+            isDrawingMode: true // 手書き入力ON
+          });
+          const fb = this.dlg_camera.fb;
+  
+          //ペンの色/・種類指定
+          fb.freeDrawingBrush = new fabric['PencilBrush'](fb); // ペンシルブラシを指定
+          const brush = fb.freeDrawingBrush;
+          brush.color = '#0F0'; //色　とりあえず緑で設定
+          if (brush.getPatternSrc) {
+            brush.source = brush.getPatternSrc.call(brush); // 設定を反映
+          }
+          brush.width = 5; // 線の太さを指定
+        }
+
+        //写真をtmp-canvasに一旦書き出し
+        const tmp = document.querySelector("#tmp");
+        tmp.getContext("2d").drawImage(this.dlg_camera.video, 0, 0);
+
+        //背景画像を設定(tmpからdataURLで取得)
+        const me = this;
+        fabric.Image.fromURL(tmp.toDataURL("image/png"), function (img) {
+          const fb = me.dlg_camera.fb;
+          fb.setBackgroundImage(img, fb.requestRenderAll.bind(fb)); // 画像を背景に設定
+        });
       });
-      */
     },
-    delPic: function(){
-      this.dlg_camera.picData = '';
+    dlgDelPic: function () {
+      this.dlg_camera.fb.clear();
       this.dlg_camera.isEdit = false;
     },
-    addPic: function(){
-      this.item_pic.src.push(this.dlg_camera.picData);
+    addPic: function () {
+      this.item_pic.src.push(this.dlg_camera.fb.toDataURL("image/png"));
       this.closeCamera();
     },
-    closeCamera: function(){
-      this.delPic();
+    closeCamera: function () {
+      this.dlgDelPic();
       this.dlg_camera.isShow = false;
     }
   }
