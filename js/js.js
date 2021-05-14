@@ -159,6 +159,7 @@ var app = new Vue({
     addPic: function () {
       this.item_pic.src.push(this.dlg_camera.fb.toDataURL("image/png"));
       this.closeCamera();
+      this.item_pic.current = this.item_pic.src.length - 1;
     },
     closeCamera: function () {
       this.dlgDelPic();
