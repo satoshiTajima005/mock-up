@@ -1,6 +1,8 @@
 var app = new Vue({
   el: '#app',
   data: {
+    vWidth: 1280,
+    vHeight: 720,
     editor: ClassicEditor,
     editorData: '<p>自由入力テキストエリア</p><h2><a href="https://ckeditor.com/ckeditor-5/demo/"><strong>エディターデモページ</strong></a></h2><figure class="image image-style-side"><img src="https://placehold.jp/640x480.png"><figcaption>画像に対するキャプションが入れられます</figcaption></figure><p>&nbsp;</p><p>画像を横にずらして、説明文を入れられます。</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>',
     editorConfig: {
@@ -17,11 +19,13 @@ var app = new Vue({
     press_proc: '16',
     dlg_pic: {
       isShow: false,
-      current: 0
+      current: 0,
+      list: pic
     },
     dlg_mov: {
       isShow: false,
-      current: 0
+      current: 0,
+      list: mov
     },
     dlg_oth: {
       isShow: false
@@ -52,8 +56,8 @@ var app = new Vue({
       const constraints = {
         audio: false,
         video: {
-          width: 1280,
-          height: 720,
+          width: this.vWidth,
+          height: this.vHeight,
           facingMode: "environment" // リアカメラを利用する場合
         }
       };
@@ -119,7 +123,7 @@ var app = new Vue({
 
       //再描画した後にCVS取得しFabric設定(ロード時にはエレメントが無いから)
       this.$nextTick(function () {
-        //fbの初期設定と設定のcanvasをVue登録
+        //初回だけ、Fabric.jsの初期化
         if (this.dlg_camera.fb == null){
           this.dlg_camera.fb = new fabric.Canvas("cvs", {
             isDrawingMode: true // 手書き入力ON

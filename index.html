@@ -548,6 +548,7 @@
     </div>
 
     <!--ダイアログ-->
+    <!--写真-->
     <div class="modal" :class="{'is-active': dlg_pic.isShow}">
       <div class="modal-background"></div>
       <div class="modal-card">
@@ -559,74 +560,23 @@
           <div class="columns">
             <div class="column is-6">
               <div class="media-wrap">
-                <img src="https://placehold.jp/640x480.png">
+                <img :src="dlg_pic.list[dlg_pic.current].src">
               </div>
             </div>
             <div class="column" style="height:calc(100vh - 210px);max-height:500px; overflow-y:scroll;">
-              <div class="media" @click="dlg_pic.current=0" :class="{'is-selected': dlg_pic.current==0}">
+              <div v-for="(v, index) in dlg_pic.list" class="media" @click="dlg_pic.current=index" :class="{'is-selected': dlg_pic.current==index}">
                 <div class="media-left">
                   <figure class="image is-128x128">
-                    <img src="https://bulma.io/images/placeholders/128x128.png" alt="Placeholder image">
+                    <img :src="v.src" alt="Placeholder image">
                   </figure>
                 </div>
                 <div class="media-content">
                   <div class="field has-addons mb-1">
-                    <div class="control is-expanded"><input class="input is-small is-fullwidth" placeholder="タイトル">
+                    <div class="control is-expanded"><input class="input is-small is-fullwidth" placeholder="タイトル" v-model="v.title">
                     </div>
-                    <div class="control"><input class="input is-small" placeholder="登録者名"></div>
+                    <div class="control"><input class="input is-small" placeholder="登録者名" v-model="v.name"></div>
                   </div>
-                  <p class="subtitle is-6"><textarea class="textarea is-small" placeholder="コメント"></textarea></p>
-                </div>
-              </div>
-              <div class="media" @click="dlg_pic.current=1" :class="{'is-selected': dlg_pic.current==1}">
-                <div class="media-left">
-                  <figure class="image is-128x128">
-                    <img src="https://bulma.io/images/placeholders/128x128.png" alt="Placeholder image">
-                  </figure>
-                </div>
-                <div class="media-content">
-                  <div class="field has-addons mb-1">
-                    <div class="control is-expanded"><input class="input is-small is-fullwidth" value="突き切り機注意点"></div>
-                    <div class="control"><input class="input is-small" placeholder="登録者名"></div>
-                  </div>
-                  <p class="subtitle is-6">
-                    <textarea
-                      class="textarea is-small">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、</textarea>
-                  </p>
-                </div>
-              </div>
-              <div class="media" @click="dlg_pic.current=2" :class="{'is-selected': dlg_pic.current==2}">
-                <div class="media-left">
-                  <figure class="image is-128x128">
-                    <img src="https://bulma.io/images/placeholders/128x128.png" alt="Placeholder image">
-                  </figure>
-                </div>
-                <div class="media-content">
-                  <div class="field has-addons mb-1">
-                    <div class="control is-expanded"><input class="input is-small is-fullwidth" value="ワイドの注意点"></div>
-                    <div class="control"><input class="input is-small" placeholder="登録者名"></div>
-                  </div>
-                  <p class="subtitle is-6">
-                    <textarea
-                      class="textarea is-small">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、</textarea>
-                  </p>
-                </div>
-              </div>
-              <div class="media" @click="dlg_pic.current=3" :class="{'is-selected': dlg_pic.current==3}">
-                <div class="media-left">
-                  <figure class="image is-128x128">
-                    <img src="https://bulma.io/images/placeholders/128x128.png" alt="Placeholder image">
-                  </figure>
-                </div>
-                <div class="media-content">
-                  <div class="field has-addons mb-1">
-                    <div class="control is-expanded"><input class="input is-small is-fullwidth" value="シャーリング注意点"></div>
-                    <div class="control"><input class="input is-small" placeholder="登録者名"></div>
-                  </div>
-                  <p class="subtitle is-6">
-                    <textarea
-                      class="textarea is-small">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、</textarea>
-                  </p>
+                  <p class="subtitle is-6"><textarea class="textarea is-small" placeholder="コメント" v-model="v.comment"></textarea></p>
                 </div>
               </div>
             </div>
@@ -640,7 +590,7 @@
         </footer>
       </div>
     </div>
-
+    <!--動画-->
     <div class="modal" :class="{'is-active': dlg_mov.isShow}">
       <div class="modal-background"></div>
       <div class="modal-card">
@@ -652,58 +602,17 @@
           <div class="columns">
             <div class="column is-7">
               <div class="media-wrap">
-                <video src="mov/shiage.mp4" controls v-if="dlg_mov.current==0"></video>
-                <video src="mov/slit.mp4" controls v-if="dlg_mov.current==1"></video>
-                <video src="mov/Wildlife.mp4" controls v-if="dlg_mov.current==2"></video>
+                <video :src="dlg_mov.list[dlg_mov.current].src" controls></video>
               </div>
             </div>
             <div class="column" style="height:calc(100vh - 210px);max-height:500px; overflow-y:scroll;">
-              <div class="media" @click="dlg_mov.current=0" :class="{'is-selected': dlg_mov.current==0}">
-                <div class="media-left">
-                  <figure class="image is-128x128">
-                    <img src="https://bulma.io/images/placeholders/128x128.png" alt="Placeholder image">
-                  </figure>
-                </div>
+              <div v-for="(v, index) in dlg_mov.list" class="media" @click="dlg_mov.current=index" :class="{'is-selected': dlg_mov.current==index}">
                 <div class="media-content">
                   <div class="field has-addons mb-1">
-                    <div class="control"><input class="input is-small" placeholder="タイトル" value="仕上げ"></div>
-                    <div class="control"><input class="input is-small" placeholder="登録者名" value="ああああ"></div>
+                    <div class="control"><input class="input is-small" placeholder="タイトル" v-model="v.title"></div>
+                    <div class="control"><input class="input is-small" placeholder="登録者名" v-model="v.name"></div>
                   </div>
-                  <p class="subtitle is-6"><textarea class="textarea is-small" placeholder="コメント"></textarea></p>
-                </div>
-              </div>
-              <div class="media" @click="dlg_mov.current=1" :class="{'is-selected': dlg_mov.current==1}">
-                <div class="media-left">
-                  <figure class="image is-128x128">
-                    <img src="https://bulma.io/images/placeholders/128x128.png" alt="Placeholder image">
-                  </figure>
-                </div>
-                <div class="media-content">
-                  <div class="field has-addons mb-1">
-                    <div class="control"><input class="input is-small" placeholder="タイトル" value="スリット"></div>
-                    <div class="control"><input class="input is-small" placeholder="登録者名" value="いいいい"></div>
-                  </div>
-                  <p class="subtitle is-6">
-                    <textarea
-                      class="textarea is-small">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、</textarea>
-                  </p>
-                </div>
-              </div>
-              <div class="media" @click="dlg_mov.current=2" :class="{'is-selected': dlg_mov.current==2}">
-                <div class="media-left">
-                  <figure class="image is-128x128">
-                    <img src="https://bulma.io/images/placeholders/128x128.png" alt="Placeholder image">
-                  </figure>
-                </div>
-                <div class="media-content">
-                  <div class="field has-addons mb-1">
-                    <div class="control"><input class="input is-small" placeholder="タイトル" value="デモムービー"></div>
-                    <div class="control"><input class="input is-small" placeholder="登録者名" value="うううう"></div>
-                  </div>
-                  <p class="subtitle is-6">
-                    <textarea
-                      class="textarea is-small">この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、</textarea>
-                  </p>
+                  <p class="subtitle is-6"><textarea class="textarea is-small" placeholder="コメント" v-model="v.comment"></textarea></p>
                 </div>
               </div>
             </div>
@@ -716,7 +625,7 @@
         </footer>
       </div>
     </div>
-
+    <!--その他-->
     <div class="modal" :class="{'is-active': dlg_oth.isShow}">
       <div class="modal-background"></div>
       <div class="modal-card">
@@ -794,10 +703,10 @@
           <button class="delete" aria-label="close" @click="closeCamera"></button>
         </header>
         <section class="modal-card-body">
-          <video id="camera" width="1280" height="720" autoplay playsinline="true" v-show="!dlg_camera.isEdit"></video>
-          <canvas id="tmp" width="1280" height="720" style="display:none"></canvas>
+          <video id="camera" :width="vWidth" :height="vHeight" autoplay playsinline="true" v-show="!dlg_camera.isEdit"></video>
+          <canvas id="tmp" :width="vWidth" :height="vHeight" style="display:none"></canvas>
           <div v-show="dlg_camera.isEdit">
-            <canvas id="cvs" width="1280" height="720"></canvas>
+            <canvas id="cvs" :width="vWidth" :height="vHeight"></canvas>
           </div>
         </section>
         <footer class="modal-card-foot">

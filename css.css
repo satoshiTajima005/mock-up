@@ -105,13 +105,6 @@ hr {
   transform: translateY(-50%) translateX(-50%);
 }
 
-#editPic {
-  width: 1280px;
-  height: 720px;
-  display: block;
-  max-width: 100%;
-}
-
 .headers {
   font-size: large;
   font-weight: bold;
