@@ -1,8 +1,8 @@
 var app = new Vue({
   el: '#app',
   data: {
-    vWidth: 1280,
-    vHeight: 720,
+    vWidth: 1280, //さしあたりの設定　カメラの画素数と画面上のサイズの整合を取る必要あり
+    vHeight: 720, //さしあたりの設定　カメラの画素数と画面上のサイズの整合を取る必要あり
     editor: ClassicEditor,
     editorData: '<p>自由入力テキストエリア</p><h2><a href="https://ckeditor.com/ckeditor-5/demo/"><strong>エディターデモページ</strong></a></h2><figure class="image image-style-side"><img src="https://placehold.jp/640x480.png"><figcaption>画像に対するキャプションが入れられます</figcaption></figure><p>&nbsp;</p><p>画像を横にずらして、説明文を入れられます。</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>',
     editorConfig: {
