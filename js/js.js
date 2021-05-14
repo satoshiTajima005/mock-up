@@ -1,8 +1,8 @@
 var app = new Vue({
   el: '#app',
   data: {
-    vWidth: 1280, //さしあたりの設定　カメラの画素数と画面上のサイズの整合を取る必要あり
-    vHeight: 720, //さしあたりの設定　カメラの画素数と画面上のサイズの整合を取る必要あり
+    vWidth: 1280,
+    vHeight: 720,
     editor: ClassicEditor,
     editorData: '<p>自由入力テキストエリア</p><h2><a href="https://ckeditor.com/ckeditor-5/demo/"><strong>エディターデモページ</strong></a></h2><figure class="image image-style-side"><img src="https://placehold.jp/640x480.png"><figcaption>画像に対するキャプションが入れられます</figcaption></figure><p>&nbsp;</p><p>画像を横にずらして、説明文を入れられます。</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>',
     editorConfig: {
@@ -72,6 +72,21 @@ var app = new Vue({
       }).catch(function (err) {
         console.log(err.name + ": " + err.message);
       });
+
+      //Fabric.jsの初期設定
+      this.dlg_camera.fb = new fabric.Canvas("cvs", {
+        isDrawingMode: true // 手書き入力ON
+      });
+      const fb = this.dlg_camera.fb;
+
+      //ペンの色/・種類指定
+      fb.freeDrawingBrush = new fabric['PencilBrush'](fb); // ペンシルブラシを指定
+      const brush = fb.freeDrawingBrush;
+      brush.color = '#0F0'; //色　とりあえず緑で設定
+      if (brush.getPatternSrc) {
+        brush.source = brush.getPatternSrc.call(brush); // 設定を反映
+      }
+      brush.width = 5; // 線の太さを指定
     }
 
     Vue.use(CKEditor);
@@ -121,36 +136,17 @@ var app = new Vue({
     shutter: function () {
       this.dlg_camera.isEdit = true;
 
-      //再描画した後にCVS取得しFabric設定(ロード時にはエレメントが無いから)
-      this.$nextTick(function () {
-        //初回だけ、Fabric.jsの初期化
-        if (this.dlg_camera.fb == null){
-          this.dlg_camera.fb = new fabric.Canvas("cvs", {
-            isDrawingMode: true // 手書き入力ON
-          });
-          const fb = this.dlg_camera.fb;
-  
-          //ペンの色/・種類指定
-          fb.freeDrawingBrush = new fabric['PencilBrush'](fb); // ペンシルブラシを指定
-          const brush = fb.freeDrawingBrush;
-          brush.color = '#0F0'; //色　とりあえず緑で設定
-          if (brush.getPatternSrc) {
-            brush.source = brush.getPatternSrc.call(brush); // 設定を反映
-          }
-          brush.width = 5; // 線の太さを指定
-        }
+      //写真をtmp-canvasに一旦書き出し
+      const tmp = document.querySelector("#tmp");
+      tmp.getContext("2d").drawImage(this.dlg_camera.video, 0, 0);
 
-        //写真をtmp-canvasに一旦書き出し
-        const tmp = document.querySelector("#tmp");
-        tmp.getContext("2d").drawImage(this.dlg_camera.video, 0, 0);
-
-        //背景画像を設定(tmpからdataURLで取得)
-        const me = this;
-        fabric.Image.fromURL(tmp.toDataURL("image/png"), function (img) {
-          const fb = me.dlg_camera.fb;
-          fb.setBackgroundImage(img, fb.requestRenderAll.bind(fb)); // 画像を背景に設定
-        });
+      //背景画像を設定(tmpからdataURLで取得)
+      const me = this;
+      fabric.Image.fromURL(tmp.toDataURL("image/png"), function (img) {
+        const fb = me.dlg_camera.fb;
+        fb.setBackgroundImage(img, fb.requestRenderAll.bind(fb)); // 画像を背景に設定
       });
+
     },
     dlgDelPic: function () {
       this.dlg_camera.fb.clear();
