@@ -44,17 +44,26 @@ var app = new Vue({
     dlg_camera: {
       video: {},
       fb: null,
+      current: 6,
+      weight: {
+        current: 1,
+        list: [1, 3, 6, 12],
+        name: ['極細','細い','太い','極太'],
+      },
+      color: {
+        current: 0,
+        list: ['red', 'orange', 'yellow', 'lime',  'cyan',  'blue',  'magenta']
+      },
       isShow: false,
-      isEdit: false
+      isEdit: false,
+      shutterText: 'シャッター'
     }
   },
   mounted: function () {
     if (navigator.mediaDevices) {
-      this.dlg_camera.video = document.querySelector("#camera");
-
       /** カメラ設定 */
       const constraints = {
-        audio: false,
+        audio: true,
         video: {
           width: this.vWidth,
           height: this.vHeight,
@@ -63,6 +72,7 @@ var app = new Vue({
       };
 
       //カメラを<video>と同期
+      this.dlg_camera.video = document.querySelector("#camera");
       const v = this.dlg_camera.video;
       navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
         v.srcObject = stream;
@@ -81,12 +91,8 @@ var app = new Vue({
 
       //ペンの色/・種類指定
       fb.freeDrawingBrush = new fabric['PencilBrush'](fb); // ペンシルブラシを指定
-      const brush = fb.freeDrawingBrush;
-      brush.color = '#0F0'; //色　とりあえず緑で設定
-      if (brush.getPatternSrc) {
-        brush.source = brush.getPatternSrc.call(brush); // 設定を反映
-      }
-      brush.width = 5; // 線の太さを指定
+      this.changeColor();
+      this.changeWeight();
     }
 
     Vue.use(CKEditor);
@@ -133,12 +139,19 @@ var app = new Vue({
     open_dlg_oth: function () {
       this.dlg_oth.isShow = true;
     },
-    shutter: function () {
-      this.dlg_camera.isEdit = true;
+    shutter: function (isRewrite) {
+      if (this.dlg_camera.isEdit && !isRewrite){
+        this.dlg_camera.fb.clear();
+        this.dlg_camera.isEdit = false;
+        this.dlg_camera.shutterText = 'シャッター';
+        return;
+      }
 
       //写真をtmp-canvasに一旦書き出し
       const tmp = document.querySelector("#tmp");
-      tmp.getContext("2d").drawImage(this.dlg_camera.video, 0, 0);
+      if (!isRewrite) tmp.getContext("2d").drawImage(this.dlg_camera.video, 0, 0);
+      this.dlg_camera.isEdit = true;
+      this.dlg_camera.shutterText = '取り直し';
 
       //背景画像を設定(tmpからdataURLで取得)
       const me = this;
@@ -146,11 +159,33 @@ var app = new Vue({
         const fb = me.dlg_camera.fb;
         fb.setBackgroundImage(img, fb.requestRenderAll.bind(fb)); // 画像を背景に設定
       });
-
     },
-    dlgDelPic: function () {
+    changeWeight: function(){
+      const cm = this.dlg_camera;
+      if (cm.weight.current == (cm.weight.list.length - 1)){
+        cm.weight.current = 0;
+      }else{
+        ++cm.weight.current;
+      }
+      const brush = cm.fb.freeDrawingBrush;
+      brush.width = cm.weight.list[cm.weight.current]; // 線の太さを指定
+    },
+    changeColor: function(){
+      const cm = this.dlg_camera;
+      if (cm.color.current == (cm.color.list.length - 1)){
+        cm.color.current = 0;
+      }else{
+        ++cm.color.current;
+      }
+      const brush = cm.fb.freeDrawingBrush;
+      brush.color = cm.color.list[cm.color.current]; //色
+      if (brush.getPatternSrc) {
+        brush.source = brush.getPatternSrc.call(brush); // 設定を反映
+      }
+    },
+    clearPencil: function(){
       this.dlg_camera.fb.clear();
-      this.dlg_camera.isEdit = false;
+      this.shutter(true);
     },
     addPic: function () {
       this.item_pic.src.push(this.dlg_camera.fb.toDataURL("image/png"));
@@ -158,7 +193,9 @@ var app = new Vue({
       this.item_pic.current = this.item_pic.src.length - 1;
     },
     closeCamera: function () {
-      this.dlgDelPic();
+      this.dlg_camera.fb.clear();
+      this.dlg_camera.isEdit = false;
+      this.dlg_camera.shutterText = 'シャッター';
       this.dlg_camera.isShow = false;
     }
   }

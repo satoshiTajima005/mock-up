@@ -710,8 +710,10 @@
           </div>
         </section>
         <footer class="modal-card-foot">
-          <button class="button" @click="shutter" :disabled="dlg_camera.isEdit">シャッター</button>
-          <button class="button" @click="dlgDelPic" :disabled="!dlg_camera.isEdit">取り直し</button>
+          <button class="button" @click="changeColor" :disabled="!dlg_camera.isEdit" :style="{background: dlg_camera.color.list[dlg_camera.color.current]}">ペン色</button>
+          <button class="button" @click="changeWeight" :disabled="!dlg_camera.isEdit">{{dlg_camera.weight.name[dlg_camera.weight.current]}}</button>
+          <button class="button" @click="clearPencil" :disabled="!dlg_camera.isEdit">手書きクリア</button>
+          <button class="button is-danger is-light" @click="shutter(false)">{{dlg_camera.shutterText}}</button>
           <button class="button" @click="addPic" :disabled="!dlg_camera.isEdit">登録</button>
           <button class="button" @click="closeCamera">閉じる</button>
         </footer>
