@@ -6,10 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>タブレットシステム - モックアップ</title>
   <meta name="description" content="">
+  <meta name="robots" content="noindex">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
-  <!--Vue2-->  
+  <!--Vue2-->
   <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
   <!--ckeditor-5-->
   <script src="./node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js"></script>
@@ -18,7 +19,8 @@
   <!--Fabric.js-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.3.1/fabric.min.js"></script>
   <!--Fontawsome-->
-  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
   <!--Bulma-->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.css">
   <link rel="stylesheet" href="css.css">
@@ -114,8 +116,9 @@
         <div class="item_top columns" v-if="current_view=='item'">
           <div class="column is-5">
             <div class="columns">
-              <div class="column"><a class="button is-fullwidth is-link" href="5MVS336SF001-.pdf"
-                  target="_blank">図面議事録</a></div>
+              <div class="column">
+                <a class="button is-fullwidth is-link" href="gijiroku.pdf" target="_blank">図面議事録</a>
+              </div>
               <div class="column"><a class="button is-fullwidth is-link" disabled>対策書発行履歴</a></div>
               <div class="column"><a class="button is-fullwidth is-link" disabled>梱包仕様書</a></div>
             </div>
@@ -564,7 +567,8 @@
               </div>
             </div>
             <div class="column" style="height:calc(100vh - 210px);max-height:500px; overflow-y:scroll;">
-              <div v-for="(v, index) in dlg_pic.list" class="media" @click="dlg_pic.current=index" :class="{'is-selected': dlg_pic.current==index}">
+              <div v-for="(v, index) in dlg_pic.list" class="media" @click="dlg_pic.current=index"
+                :class="{'is-selected': dlg_pic.current==index}">
                 <div class="media-left">
                   <figure class="image is-128x128">
                     <img :src="v.src" alt="Placeholder image">
@@ -572,11 +576,13 @@
                 </div>
                 <div class="media-content">
                   <div class="field has-addons mb-1">
-                    <div class="control is-expanded"><input class="input is-small is-fullwidth" placeholder="タイトル" v-model="v.title">
+                    <div class="control is-expanded"><input class="input is-small is-fullwidth" placeholder="タイトル"
+                        v-model="v.title">
                     </div>
                     <div class="control"><input class="input is-small" placeholder="登録者名" v-model="v.name"></div>
                   </div>
-                  <p class="subtitle is-6"><textarea class="textarea is-small" placeholder="コメント" v-model="v.comment"></textarea></p>
+                  <p class="subtitle is-6"><textarea class="textarea is-small" placeholder="コメント"
+                      v-model="v.comment"></textarea></p>
                 </div>
               </div>
             </div>
@@ -606,13 +612,15 @@
               </div>
             </div>
             <div class="column" style="height:calc(100vh - 210px);max-height:500px; overflow-y:scroll;">
-              <div v-for="(v, index) in dlg_mov.list" class="media" @click="dlg_mov.current=index" :class="{'is-selected': dlg_mov.current==index}">
+              <div v-for="(v, index) in dlg_mov.list" class="media" @click="dlg_mov.current=index"
+                :class="{'is-selected': dlg_mov.current==index}">
                 <div class="media-content">
                   <div class="field has-addons mb-1">
                     <div class="control"><input class="input is-small" placeholder="タイトル" v-model="v.title"></div>
                     <div class="control"><input class="input is-small" placeholder="登録者名" v-model="v.name"></div>
                   </div>
-                  <p class="subtitle is-6"><textarea class="textarea is-small" placeholder="コメント" v-model="v.comment"></textarea></p>
+                  <p class="subtitle is-6"><textarea class="textarea is-small" placeholder="コメント"
+                      v-model="v.comment"></textarea></p>
                 </div>
               </div>
             </div>
@@ -703,15 +711,18 @@
           <button class="delete" aria-label="close" @click="closeCamera"></button>
         </header>
         <section class="modal-card-body">
-          <video id="camera" :width="vWidth" :height="vHeight" autoplay playsinline="true" v-show="!dlg_camera.isEdit"></video>
+          <video id="camera" :width="vWidth" :height="vHeight" autoplay playsinline="true"
+            v-show="!dlg_camera.isEdit"></video>
           <canvas id="tmp" :width="vWidth" :height="vHeight" style="display:none"></canvas>
           <div v-show="dlg_camera.isEdit">
             <canvas id="cvs" :width="vWidth" :height="vHeight"></canvas>
           </div>
         </section>
         <footer class="modal-card-foot">
-          <button class="button" @click="changeColor" :disabled="!dlg_camera.isEdit" :style="{background: dlg_camera.color.list[dlg_camera.color.current]}">ペン色</button>
-          <button class="button" @click="changeWeight" :disabled="!dlg_camera.isEdit">{{dlg_camera.weight.name[dlg_camera.weight.current]}}</button>
+          <button class="button" @click="changeColor" :disabled="!dlg_camera.isEdit"
+            :style="{background: dlg_camera.color.list[dlg_camera.color.current]}">ペン色</button>
+          <button class="button" @click="changeWeight"
+            :disabled="!dlg_camera.isEdit">{{dlg_camera.weight.name[dlg_camera.weight.current]}}</button>
           <button class="button" @click="clearPencil" :disabled="!dlg_camera.isEdit">手書きクリア</button>
           <button class="button is-danger is-light" @click="shutter(false)">{{dlg_camera.shutterText}}</button>
           <button class="button" @click="addPic" :disabled="!dlg_camera.isEdit">登録</button>
