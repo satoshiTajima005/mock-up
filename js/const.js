@@ -1,140 +1,140 @@
 const itemlist = [{
-    itemcode: "5MVS336SF001-",
-    itemname: "ＥＢ１０５８　ＳＨＥＥＴ　ＤＵＳＴ　ＳＵＢ",
+    itemcode: "ITEM-CODE-01",
+    itemname: "ＳＨＥＥＴ　ＤＵＳＴ　ＳＵＢ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
   {
-    itemcode: "5MVS111EF446-",
-    itemname: "ＤＢ６２　ＴＡＰＥ　ＣＯＶＥＲ　ＡＸＩＳ　Ｌ",
+    itemcode: "ITEM-CODE-02",
+    itemname: "ＴＡＰＥ　ＣＯＶＥＲ　ＡＸＩＳ　Ｌ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
   {
-    itemcode: "5MVS412EF020-",
+    itemcode: "ITEM-CODE-03",
     itemname: "ＥＢ１０６５　ＴＡＰＥ　ＢＵＴＴＯＮ　ＶＯＬ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
   {
-    itemcode: "5MVS216EF012-",
+    itemcode: "ITEM-CODE-04",
     itemname: "ＳＰＡＣＥＲ　ＵＳＢ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
   {
-    itemcode: "5MVS111EF446-",
-    itemname: "ＤＢ６２　ＴＡＰＥ　ＣＯＶＥＲ　ＡＸＩＳ　Ｌ",
+    itemcode: "ITEM-CODE-02",
+    itemname: "ＴＡＰＥ　ＣＯＶＥＲ　ＡＸＩＳ　Ｌ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
   {
-    itemcode: "5MVS216EF012-",
+    itemcode: "ITEM-CODE-04",
     itemname: "ＳＰＡＣＥＲ　ＵＳＢ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
   {
-    itemcode: "5MVS111EF446-",
-    itemname: "ＤＢ６２　ＴＡＰＥ　ＣＯＶＥＲ　ＡＸＩＳ　Ｌ",
+    itemcode: "ITEM-CODE-02",
+    itemname: "ＴＡＰＥ　ＣＯＶＥＲ　ＡＸＩＳ　Ｌ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
   {
-    itemcode: "5MVS216EF012-",
+    itemcode: "ITEM-CODE-04",
     itemname: "ＳＰＡＣＥＲ　ＵＳＢ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
   {
-    itemcode: "5MVS111EF446-",
-    itemname: "ＤＢ６２　ＴＡＰＥ　ＣＯＶＥＲ　ＡＸＩＳ　Ｌ",
+    itemcode: "ITEM-CODE-02",
+    itemname: "ＴＡＰＥ　ＣＯＶＥＲ　ＡＸＩＳ　Ｌ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
   {
-    itemcode: "5MVS216EF012-",
+    itemcode: "ITEM-CODE-04",
     itemname: "ＳＰＡＣＥＲ　ＵＳＢ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
   {
-    itemcode: "5MVS111EF446-",
-    itemname: "ＤＢ６２　ＴＡＰＥ　ＣＯＶＥＲ　ＡＸＩＳ　Ｌ",
+    itemcode: "ITEM-CODE-02",
+    itemname: "ＴＡＰＥ　ＣＯＶＥＲ　ＡＸＩＳ　Ｌ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
   {
-    itemcode: "5MVS216EF012-",
+    itemcode: "ITEM-CODE-04",
     itemname: "ＳＰＡＣＥＲ　ＵＳＢ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
   {
-    itemcode: "5MVS111EF446-",
-    itemname: "ＤＢ６２　ＴＡＰＥ　ＣＯＶＥＲ　ＡＸＩＳ　Ｌ",
+    itemcode: "ITEM-CODE-02",
+    itemname: "ＴＡＰＥ　ＣＯＶＥＲ　ＡＸＩＳ　Ｌ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
   {
-    itemcode: "5MVS216EF012-",
+    itemcode: "ITEM-CODE-04",
     itemname: "ＳＰＡＣＥＲ　ＵＳＢ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
   {
-    itemcode: "5MVS111EF446-",
-    itemname: "ＤＢ６２　ＴＡＰＥ　ＣＯＶＥＲ　ＡＸＩＳ　Ｌ",
+    itemcode: "ITEM-CODE-02",
+    itemname: "ＴＡＰＥ　ＣＯＶＥＲ　ＡＸＩＳ　Ｌ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
   {
-    itemcode: "5MVS216EF012-",
+    itemcode: "ITEM-CODE-04",
     itemname: "ＳＰＡＣＥＲ　ＵＳＢ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
   {
-    itemcode: "5MVS111EF446-",
-    itemname: "ＤＢ６２　ＴＡＰＥ　ＣＯＶＥＲ　ＡＸＩＳ　Ｌ",
+    itemcode: "ITEM-CODE-02",
+    itemname: "ＴＡＰＥ　ＣＯＶＥＲ　ＡＸＩＳ　Ｌ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
   {
-    itemcode: "5MVS216EF012-",
+    itemcode: "ITEM-CODE-04",
     itemname: "ＳＰＡＣＥＲ　ＵＳＢ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
   {
-    itemcode: "5MVS111EF446-",
-    itemname: "ＤＢ６２　ＴＡＰＥ　ＣＯＶＥＲ　ＡＸＩＳ　Ｌ",
+    itemcode: "ITEM-CODE-02",
+    itemname: "ＴＡＰＥ　ＣＯＶＥＲ　ＡＸＩＳ　Ｌ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
   {
-    itemcode: "5MVS216EF012-",
+    itemcode: "ITEM-CODE-04",
     itemname: "ＳＰＡＣＥＲ　ＵＳＢ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
   {
-    itemcode: "5MVS111EF446-",
-    itemname: "ＤＢ６２　ＴＡＰＥ　ＣＯＶＥＲ　ＡＸＩＳ　Ｌ",
+    itemcode: "ITEM-CODE-02",
+    itemname: "ＴＡＰＥ　ＣＯＶＥＲ　ＡＸＩＳ　Ｌ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
   {
-    itemcode: "5MVS216EF012-",
+    itemcode: "ITEM-CODE-04",
     itemname: "ＳＰＡＣＥＲ　ＵＳＢ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
   {
-    itemcode: "5MVS111EF446-",
-    itemname: "ＤＢ６２　ＴＡＰＥ　ＣＯＶＥＲ　ＡＸＩＳ　Ｌ",
+    itemcode: "ITEM-CODE-02",
+    itemname: "ＴＡＰＥ　ＣＯＶＥＲ　ＡＸＩＳ　Ｌ",
     kana: "",
-    tokui: "(13572)京セラ"
+    tokui: "(00000)AAA社"
   },
 ];
 const ggf = [{
