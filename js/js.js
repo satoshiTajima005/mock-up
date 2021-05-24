@@ -63,7 +63,7 @@ var app = new Vue({
     if (navigator.mediaDevices) {
       /** カメラ設定 */
       const constraints = {
-        audio: true,
+        audio: false,
         video: {
           width: this.vWidth,
           height: this.vHeight,
