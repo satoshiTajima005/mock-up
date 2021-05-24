@@ -119,6 +119,10 @@ hr {
   overflow-y: scroll;
 }
 
+.isHide {
+  display:none;
+}
+
 @media print {
   body {
     size: A4 landscape;

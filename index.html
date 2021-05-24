@@ -165,7 +165,7 @@
               </div>
             </div>
             <div>
-              <img title="完成品写真" :src="item_pic.src[item_pic.current]" />
+              <img v-for="(val, index) in item_pic.src" title="完成品写真" :src="val" :class="{isHide: index!==item_pic.current}" />
             </div>
           </div>
         </div>
