@@ -61,18 +61,10 @@ var app = new Vue({
   },
   mounted: function () {
     //画面の向き取得
-    window.addEventListener("orientationchange", function () {
-      var rect = Math.abs(window.orientation);
-      if (rect === 90) {
-        /*  横画面時の処理  */
-        this.vWidth = screen.width * 0.7;
-        this.vHeight = screen.height * 0.7;
-      } else {
-        /* 縦画面時の処理  */
-        this.vWidth = screen.height * 0.7;
-        this.vHeight = screen.width * 0.7;
-      }
-    });
+    if (this.vWidth < this.vHeight) {
+      this.vWidth = screen.height * 0.7;
+      this.vHeight = screen.width * 0.7;
+    }
 
     if (navigator.mediaDevices) {
       /** カメラ設定 */
