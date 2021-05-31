@@ -1,8 +1,8 @@
 var app = new Vue({
   el: '#app',
   data: {
-    vWidth: screen.height *0.7,
-    vHeight: screen.width * 0.7,
+    vWidth: screen.width * 0.7,
+    vHeight: screen.height * 0.7,
     editor: ClassicEditor,
     editorData: '<p>自由入力テキストエリア</p><h2><a href="https://ckeditor.com/ckeditor-5/demo/"><strong>エディターデモページ</strong></a></h2><figure class="image image-style-side"><img src="https://placehold.jp/640x480.png"><figcaption>画像に対するキャプションが入れられます</figcaption></figure><p>&nbsp;</p><p>画像を横にずらして、説明文を入れられます。</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>',
     editorConfig: {
@@ -48,11 +48,11 @@ var app = new Vue({
       weight: {
         current: 1,
         list: [1, 3, 6, 12],
-        name: ['極細','細い','太い','極太'],
+        name: ['極細', '細い', '太い', '極太'],
       },
       color: {
         current: 0,
-        list: ['red', 'orange', 'yellow', 'lime',  'cyan',  'blue',  'magenta']
+        list: ['red', 'orange', 'yellow', 'lime', 'cyan', 'blue', 'magenta']
       },
       isShow: false,
       isEdit: false,
@@ -60,6 +60,20 @@ var app = new Vue({
     }
   },
   mounted: function () {
+    //画面の向き取得
+    window.addEventListener("orientationchange", function () {
+      var rect = Math.abs(window.orientation);
+      if (rect === 90) {
+        /*  横画面時の処理  */
+        this.vWidth = screen.width * 0.7;
+        this.vHeight = screen.height * 0.7;
+      } else {
+        /* 縦画面時の処理  */
+        this.vWidth = screen.height * 0.7;
+        this.vHeight = screen.width * 0.7;
+      }
+    });
+
     if (navigator.mediaDevices) {
       /** カメラ設定 */
       const constraints = {
@@ -140,7 +154,7 @@ var app = new Vue({
       this.dlg_oth.isShow = true;
     },
     shutter: function (isRewrite) {
-      if (this.dlg_camera.isEdit && !isRewrite){
+      if (this.dlg_camera.isEdit && !isRewrite) {
         this.dlg_camera.fb.clear();
         this.dlg_camera.isEdit = false;
         this.dlg_camera.shutterText = 'シャッター';
@@ -160,21 +174,21 @@ var app = new Vue({
         fb.setBackgroundImage(img, fb.requestRenderAll.bind(fb)); // 画像を背景に設定
       });
     },
-    changeWeight: function(){
+    changeWeight: function () {
       const cm = this.dlg_camera;
-      if (cm.weight.current == (cm.weight.list.length - 1)){
+      if (cm.weight.current == (cm.weight.list.length - 1)) {
         cm.weight.current = 0;
-      }else{
+      } else {
         ++cm.weight.current;
       }
       const brush = cm.fb.freeDrawingBrush;
       brush.width = cm.weight.list[cm.weight.current]; // 線の太さを指定
     },
-    changeColor: function(){
+    changeColor: function () {
       const cm = this.dlg_camera;
-      if (cm.color.current == (cm.color.list.length - 1)){
+      if (cm.color.current == (cm.color.list.length - 1)) {
         cm.color.current = 0;
-      }else{
+      } else {
         ++cm.color.current;
       }
       const brush = cm.fb.freeDrawingBrush;
@@ -183,7 +197,7 @@ var app = new Vue({
         brush.source = brush.getPatternSrc.call(brush); // 設定を反映
       }
     },
-    clearPencil: function(){
+    clearPencil: function () {
       this.dlg_camera.fb.clear();
       this.shutter(true);
     },
