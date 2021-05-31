@@ -47,9 +47,8 @@ hr {
 }
 
 .modal-card {
-  min-width: 950px;
   max-width: 1350px;
-  width: 1350px;
+  width: 90%;
 }
 
 .dies label {
