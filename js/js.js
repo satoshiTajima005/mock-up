@@ -1,8 +1,10 @@
 var app = new Vue({
   el: '#app',
   data: {
-    vWidth: screen.width * 0.7,
-    vHeight: screen.height * 0.7,
+    vWidth: 1280,
+    vHeight: 720,
+    realW: 883.391, //document.getElementById('camera').clientWidth,
+    realH: 496.906, //document.getElementById('camera').clientHeight,
     editor: ClassicEditor,
     editorData: '<p>自由入力テキストエリア</p><h2><a href="https://ckeditor.com/ckeditor-5/demo/"><strong>エディターデモページ</strong></a></h2><figure class="image image-style-side"><img src="https://placehold.jp/640x480.png"><figcaption>画像に対するキャプションが入れられます</figcaption></figure><p>&nbsp;</p><p>画像を横にずらして、説明文を入れられます。</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>',
     editorConfig: {
@@ -60,11 +62,6 @@ var app = new Vue({
     }
   },
   mounted: function () {
-    //画面の向き取得
-    if (this.vWidth < this.vHeight) {
-      this.vWidth = screen.height * 0.7;
-      this.vHeight = screen.width * 0.7;
-    }
 
     if (navigator.mediaDevices) {
       /** カメラ設定 */
@@ -97,6 +94,7 @@ var app = new Vue({
 
       //ペンの色/・種類指定
       fb.freeDrawingBrush = new fabric['PencilBrush'](fb); // ペンシルブラシを指定
+      fb.setZoom(this.realW / this.vWidth);
       this.changeColor();
       this.changeWeight();
     }

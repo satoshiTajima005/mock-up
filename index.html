@@ -711,11 +711,10 @@
           <button class="delete" aria-label="close" @click="closeCamera"></button>
         </header>
         <section class="modal-card-body">
-          <video id="camera" :width="vWidth" :height="vHeight" autoplay playsinline="true"
-            v-show="!dlg_camera.isEdit"></video>
+          <video id="camera" :width="vWidth" :height="vHeight" autoplay playsinline="true" v-show="!dlg_camera.isEdit"></video>
           <canvas id="tmp" :width="vWidth" :height="vHeight" style="display:none"></canvas>
           <div v-show="dlg_camera.isEdit">
-            <canvas id="cvs" :width="vWidth" :height="vHeight"></canvas>
+            <canvas id="cvs" :width="realW" :height="realH"></canvas>
           </div>
         </section>
         <footer class="modal-card-foot">
